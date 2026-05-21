@@ -1,0 +1,180 @@
+/* TaskPilot — application theme */
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+  --app-bg: hsl(260, 20%, 3%);
+  --app-fg: hsl(270, 5%, 96%);
+  --app-card: hsl(260, 15%, 8%);
+  --app-muted: hsl(260, 5%, 70%);
+  --app-border: hsl(260, 12%, 18%);
+  --app-primary: hsl(260, 85%, 60%);
+  --app-primary-glow: hsl(270, 90%, 70%);
+  --app-primary-fg: hsl(260, 20%, 3%);
+  --app-accent: hsl(190, 90%, 65%);
+  --app-terminal-bar: hsl(260, 12%, 12%);
+  --app-dot-red: #ff5f57;
+  --app-dot-yellow: #febc2e;
+  --app-dot-green: #28c840;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --radius: 12px;
+}
+
+html[data-theme="light"] {
+  --app-bg: hsl(260, 25%, 97%);
+  --app-fg: hsl(260, 30%, 12%);
+  --app-card: hsl(0, 0%, 100%);
+  --app-muted: hsl(260, 10%, 42%);
+  --app-border: hsl(260, 15%, 88%);
+  --app-primary: hsl(260, 70%, 52%);
+  --app-primary-glow: hsl(260, 80%, 60%);
+  --app-terminal-bar: hsl(260, 12%, 94%);
+}
+
+/* —— Site footer (main app + login) —— */
+.app-footer {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  position: relative;
+}
+
+.app-footer-accent {
+  height: 1px;
+  margin-bottom: 1.25rem;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(260deg 85% 60% / 45%),
+    hsl(190deg 90% 65% / 35%),
+    transparent
+  );
+}
+
+.app-footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  padding-bottom: 0.85rem;
+}
+
+.footer-brand-block {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.footer-logo {
+  flex-shrink: 0;
+  opacity: 0.95;
+}
+
+.footer-brand-name {
+  display: block;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: -0.02em;
+  color: var(--app-fg);
+}
+
+.footer-brand-tag {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--app-muted);
+  margin-top: 0.1rem;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  font-size: 0.82rem;
+}
+
+.footer-link {
+  color: var(--app-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer-link:hover {
+  color: var(--app-primary);
+}
+
+.footer-dot {
+  color: var(--app-border);
+  user-select: none;
+}
+
+.footer-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.footer-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid hsl(260deg 85% 60% / 25%);
+  background: hsl(260deg 85% 60% / 8%);
+  color: var(--app-primary);
+}
+
+.app-footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem 0.65rem;
+  padding: 0.75rem 0 0.25rem;
+  font-size: 0.72rem;
+  color: var(--app-muted);
+  font-family: var(--font-mono);
+  text-align: center;
+  border-top: 1px solid var(--app-border);
+}
+
+.footer-sep {
+  opacity: 0.45;
+}
+
+.footer-meta-item {
+  white-space: nowrap;
+}
+
+.footer-localhost {
+  color: hsl(190deg 90% 65% / 85%);
+}
+
+.app-footer--compact {
+  margin-top: auto;
+  padding-top: 2rem;
+  width: 100%;
+  max-width: 420px;
+}
+
+.app-footer--compact .app-footer-inner {
+  justify-content: center;
+  padding-bottom: 0.5rem;
+}
+
+.app-footer--compact .footer-brand-block {
+  flex-direction: column;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .app-footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .footer-badges {
+    width: 100%;
+  }
+}

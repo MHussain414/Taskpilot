@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ app_name }} — API</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}" />
+  <style>
+    body { max-width: 720px; margin: 2rem auto; padding: 0 1.5rem; font-family: var(--font-sans); }
+    h1 { color: var(--app-primary); }
+    code { background: var(--app-card); padding: 0.15rem 0.4rem; border-radius: 4px; }
+    a { color: var(--app-primary); }
+    ul { line-height: 1.8; }
+  </style>
+</head>
+<body>
+  <h1>{{ app_name }} REST API</h1>
+  <p>{{ app_tagline }}</p>
+  <p>OpenAPI spec: <a href="{{ url_for('main.api_openapi') }}">/api/openapi.json</a></p>
+  <h2>Endpoints</h2>
+  <ul>
+    <li><code>GET /api/health</code> — health check</li>
+    <li><code>GET/POST /api/tasks</code> — tasks CRUD</li>
+    <li><code>GET /api/tasks/export?format=json|csv</code> — export</li>
+    <li><code>POST /api/chat</code> — AI assistant</li>
+    <li><code>GET /api/dashboard</code> — analytics</li>
+    <li><code>GET /api/activity</code> — activity log</li>
+    <li><code>GET/POST /api/team</code> — team members</li>
+    <li><code>GET/POST /api/team/messages?since=N</code> — team chat</li>
+    <li><code>POST /api/seed-demo</code> — demo data</li>
+  </ul>
+  <p><a href="{{ url_for('main.index') }}">← Back to app</a></p>
+</body>
+</html>

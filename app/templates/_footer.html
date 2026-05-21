@@ -1,0 +1,36 @@
+<footer class="app-footer{% if footer_compact %} app-footer--compact{% endif %}" role="contentinfo">
+  <div class="app-footer-accent" aria-hidden="true"></div>
+  <div class="app-footer-inner">
+    <div class="footer-brand-block">
+      <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" class="footer-logo" width="28" height="28" />
+      <div>
+        <span class="footer-brand-name">{{ app_name }}</span>
+        <span class="footer-brand-tag">{{ app_tagline }}</span>
+      </div>
+    </div>
+    {% if not footer_compact %}
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="#" class="footer-link" data-footer-view="workspace">Workspace</a>
+      <span class="footer-dot" aria-hidden="true">·</span>
+      <a href="#" class="footer-link" data-footer-view="dashboard">Dashboard</a>
+      <span class="footer-dot" aria-hidden="true">·</span>
+      <a href="#" class="footer-link" data-footer-view="team">Team &amp; Chat</a>
+    </nav>
+    <div class="footer-badges">
+      <span class="footer-badge">AI Priority Engine</span>
+      <span class="footer-badge">Team Collaboration</span>
+    </div>
+    {% endif %}
+  </div>
+  <div class="app-footer-bottom">
+    <span>{{ app_copyright }}</span>
+    <span class="footer-sep" aria-hidden="true">|</span>
+    <span>{{ app_event }}</span>
+    {% if not footer_compact %}
+    <span class="footer-sep" aria-hidden="true">|</span>
+    <span class="footer-meta-item">v{{ app_version }}</span>
+    <span class="footer-sep" aria-hidden="true">|</span>
+    <span class="footer-meta-item footer-localhost">Localhost · Secure session</span>
+    {% endif %}
+  </div>
+</footer>

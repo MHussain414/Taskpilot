@@ -1,0 +1,663 @@
+% TaskPilot — Premium Technical Report (pdflatex)
+\documentclass[11pt,a4paper,twoside=false]{report}
+
+% === Encoding & fonts ===
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{lmodern}
+\usepackage{libertine}
+\usepackage{libertinust1math}
+\usepackage[scaled=0.92]{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\rmdefault}
+
+% === Layout ===
+\usepackage[
+  margin=2cm,
+  top=2.6cm,
+  bottom=2.4cm,
+  headheight=16pt,
+  footskip=28pt
+]{geometry}
+\usepackage{setspace}
+\setstretch{1.08}
+\usepackage{parskip}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+
+% === Tables ===
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage{makecell}
+
+% === Math & code ===
+\usepackage{amsmath,amssymb}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% === Graphics & diagrams ===
+\usepackage{tikz}
+\usetikzlibrary{
+  arrows.meta, positioning, calc, fit, backgrounds,
+  shadows.blur, decorations.pathmorphing, patterns,
+  shapes.geometric, shadings, fadings, matrix
+}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots,statistics}
+\usepackage{pgf-pie}
+
+% === Boxes & theorems ===
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{skins,breakable,theorems,fitting,raster,hooks}
+
+% === Headers, titles, TOC ===
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{tocloft}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{epigraph}
+\usepackage{csquotes}
+
+% === Icons & links ===
+\IfFileExists{fontawesome5.sty}{
+  \usepackage{fontawesome5}
+}{\newcommand{\faIcon}[1]{}}
+\usepackage{hyperref}
+
+% === Brand palette (matches TaskPilot UI) ===
+\definecolor{tpPurple}{RGB}{124,92,255}
+\definecolor{tpPurpleLight}{RGB}{175,150,255}
+\definecolor{tpPurpleDeep}{RGB}{88,56,200}
+\definecolor{tpDark}{RGB}{13,10,20}
+\definecolor{tpCard}{RGB}{26,22,36}
+\definecolor{tpMuted}{RGB}{130,125,150}
+\definecolor{tpAccent}{RGB}{61,214,140}
+\definecolor{tpWarn}{RGB}{255,165,2}
+\definecolor{tpDanger}{RGB}{255,90,90}
+\definecolor{tpBlue}{RGB}{90,160,255}
+\definecolor{codebg}{RGB}{22,18,32}
+\definecolor{codeframe}{RGB}{70,60,95}
+\definecolor{pagebg}{RGB}{252,251,255}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=tpPurpleDeep,
+  urlcolor=tpPurple,
+  citecolor=tpPurpleDeep,
+  pdftitle={TaskPilot — Technical Report},
+  pdfauthor={TaskPilot},
+  pdfsubject={AI Project Management Chat Module}
+}
+
+% === Listings ===
+\lstdefinestyle{tpcode}{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize\color{white!92},
+  keywordstyle=\color{tpPurpleLight}\bfseries,
+  commentstyle=\color{tpMuted},
+  stringstyle=\color{tpAccent},
+  backgroundcolor=\color{codebg},
+  frame=single,
+  rulecolor=\color{codeframe},
+  breaklines=true,
+  columns=fullflexible,
+  showstringspaces=false,
+  numbers=left,
+  numberstyle=\tiny\color{tpMuted},
+  numbersep=8pt
+}
+\lstset{style=tpcode}
+
+% === Custom boxes ===
+\newtcolorbox{tphero}[1][]{
+  enhanced, breakable,
+  colback=tpPurple!6, colframe=tpPurple,
+  fonttitle=\bfseries\sffamily,
+  coltitle=white,
+  attach boxed title to top left={yshift=-2mm,xshift=5mm},
+  boxed title style={colback=tpPurple, sharp corners, arc=2pt},
+  arc=6pt,
+  left=10pt, right=10pt, top=12pt, bottom=10pt,
+  drop shadow={black!25!white},
+  #1
+}
+
+\newtcolorbox{tpinfo}{
+  enhanced,
+  colback=tpCard!8, colframe=tpMuted!40,
+  arc=5pt, boxrule=0.8pt,
+  borderline west={3pt}{0pt}{tpPurple},
+  left=10pt, right=10pt, top=8pt, bottom=8pt
+}
+
+\newtcolorbox{tpfeature}[1]{
+  enhanced,
+  colback=white, colframe=tpPurple!35,
+  arc=4pt, boxrule=0.7pt,
+  fonttitle=\bfseries\sffamily\color{tpPurpleDeep},
+  title={#1},
+  attach boxed title to top left={xshift=4mm},
+  boxed title style={colback=tpPurple!10, colframe=tpPurple!30, arc=2pt},
+  drop shadow={black!12!white},
+  left=8pt, right=8pt, bottom=8pt, top=11pt
+}
+
+\newcommand{\metriccard}[3]{%
+  \begin{tcolorbox}[
+    enhanced, halign=center, valign=center,
+    colback=#1!12, colframe=#1!70,
+    arc=6pt, boxrule=1pt,
+    width=0.22\textwidth, height=2.5cm,
+    fontupper=\sffamily
+  ]
+  \textbf{\Large #2}\\[2pt]{\footnotesize #3}
+  \end{tcolorbox}%
+}
+
+\newtcolorbox{tpwarning}{
+  enhanced,
+  colback=tpWarn!10, colframe=tpWarn!80,
+  arc=4pt, title={\sffamily\bfseries Note},
+  fonttitle=\color{black!70}
+}
+
+% === Chapter / section styling ===
+\setcounter{secnumdepth}{3}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\sffamily\color{tpDark}}
+  {\colorbox{tpPurple}{\parbox[c][1.2cm][c]{1.2cm}{\centering\color{white}\Huge\thechapter}}}
+  {1em}
+  {\titlerule[1.2pt]\vspace{0.6ex}}
+  [\vspace{0.4ex}{\color{tpPurple!50}\titlerule}]
+
+\titleformat{\section}
+  {\Large\bfseries\sffamily\color{tpPurpleDeep}}{}{0em}{}
+  [\vspace{-0.3ex}{\color{tpPurple!35}\titlerule[0.9pt]}]
+
+\titleformat{\subsection}
+  {\large\bfseries\sffamily\color{tpDark}}{}{0em}{}
+
+% TOC styling
+\renewcommand{\cftchapfont}{\sffamily\bfseries\color{tpPurpleDeep}}
+\renewcommand{\cftsecfont}{\sffamily}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\setlength{\cftbeforechapskip}{6pt}
+
+% Captions
+\captionsetup{
+  labelfont={bf,color=tpPurpleDeep},
+  font=small,
+  skip=8pt
+}
+
+% Page style
+\pagecolor{pagebg}
+\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{tpMuted}\raisebox{-0.5pt}{\faIcon{paper-plane}}\ TaskPilot Report}
+\fancyhead[R]{\small\sffamily\color{tpMuted}AI App Development 2026\quad\faIcon{calendar-alt}}
+\fancyfoot[C]{\small\sffamily\color{tpPurple}\thepage}
+\renewcommand{\headrule}{\vspace{2pt}\color{tpPurple!25}\hrule width\headwidth height 0.5pt\vspace{2pt}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\sffamily\color{tpPurple}\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+% Helpers
+\newcommand{\tppill}[2]{\tikz[baseline=(b.base)]{
+  \node[fill=#1!18, draw=#1!60, rounded corners=3pt, inner xsep=6pt, inner ysep=2pt, font=\sffamily\footnotesize\bfseries] (b) {#2};
+}}
+\newcommand{\facheck}{\textcolor{tpAccent}{\faIcon{check-circle}}}
+
+% ===================== DOCUMENT =====================
+\begin{document}
+
+% ---------- COVER ----------
+\begin{titlepage}
+\pagecolor{tpDark}
+\begin{tikzpicture}[remember picture, overlay]
+  % Gradient mesh
+  \shade[left color=tpPurpleDeep, right color=tpDark, opacity=0.85]
+    (current page.south west) rectangle (current page.north east);
+  \shade[top color=tpPurple, bottom color=tpDark, opacity=0.35]
+    (current page.south west) rectangle ([yshift=8cm]current page.north east);
+  % Decorative circles
+  \foreach \r/\o in {14/0.04, 10/0.06, 6/0.08} {
+    \fill[tpPurpleLight, opacity=\o] ([xshift=14cm,yshift=-4cm]current page.north east) circle (\r cm);
+  }
+  % Grid
+  \foreach \x in {0,...,20} {
+    \draw[white, opacity=0.03] ([xshift=\x cm]current page.south west) -- ++(0,30);
+  }
+  \foreach \y in {0,...,30} {
+    \draw[white, opacity=0.03] (current page.south west) -- ++(22,0);
+  }
+  % Logo block
+  \node[
+    fill=tpPurple, rounded corners=10pt, minimum size=2.4cm,
+    blur shadow={shadow blur steps=8, shadow xshift=0pt, shadow yshift=-2pt, shadow opacity=40}
+  ] at ([xshift=2.8cm,yshift=-3.2cm]current page.north west) {};
+  \node[white, font=\fontsize{36}{36}\selectfont\bfseries\sffamily]
+    at ([xshift=2.8cm,yshift=-3.2cm]current page.north west) {TP};
+  % Ribbon
+  \fill[tpAccent, opacity=0.9]
+    ([xshift=0cm,yshift=-9.5cm]current page.west) --
+    ([xshift=9cm,yshift=-8.8cm]current page.west) --
+    ([xshift=9cm,yshift=-10.2cm]current page.west) -- cycle;
+  \node[anchor=west, font=\sffamily\bfseries\color{tpDark}]
+    at ([xshift=0.4cm,yshift=-9.5cm]current page.west)
+    {\faIcon{award}\ COMPETITION SUBMISSION READY};
+\end{tikzpicture}
+
+\vspace*{2.2cm}
+\begin{center}
+  {\fontsize{48}{52}\selectfont\bfseries\sffamily\color{white}TaskPilot\par}
+  \vspace{0.35cm}
+  {\LARGE\color{tpPurpleLight}\sffamily AI Project Management Chat Module\par}
+  \vspace{1cm}
+  \begin{tikzpicture}
+    \draw[tpPurpleLight, line width=2pt, {Latex[length=3mm]}-{Latex[length=3mm]}] (-5.5,0) -- (5.5,0);
+    \fill[tpAccent] (0,0) circle (4pt);
+  \end{tikzpicture}
+  \vspace{1cm}
+  {\huge\bfseries\sffamily\color{white!95}Technical Report\par}
+  \vspace{0.25cm}
+  {\Large\color{white!75}\sffamily Functional Documentation \& System Design\par}
+\end{center}
+
+\vspace{1.2cm}
+\begin{center}
+\begin{tikzpicture}
+  \node[
+    fill=white!8, draw=white!25, rounded corners=8pt,
+    inner sep=14pt, text width=0.82\textwidth, align=left
+  ] {
+    \sffamily\color{white!90}
+    \begin{tabular}{@{}>{\bfseries\color{tpPurpleLight}}p{3.4cm}@{\hspace{0.5cm}}p{8.2cm}@{}}
+      Platform & Browser GUI on localhost (\texttt{127.0.0.1:5000}) \\[0.25em]
+      Stack & Python 3 \textbullet\ Flask 3 \textbullet\ SQLite \textbullet\ HTML/CSS/JS \\[0.25em]
+      AI & Rule-based engine + optional OpenAI GPT \\[0.25em]
+      Event & AI App Development Competition 2026 \\[0.25em]
+      Version & May 2026 --- TaskPilot v1.0 \\
+    \end{tabular}
+  };
+\end{tikzpicture}
+\end{center}
+
+\vfill
+\begin{center}
+  \color{tpMuted}\sffamily\large
+  \faIcon{comments}\quad Chat \quad
+  \faIcon{tasks}\quad Tasks \quad
+  \faIcon{chart-pie}\quad Dashboard \quad
+  \faIcon{users}\quad Team
+\end{center}
+\vspace{1.8cm}
+\end{titlepage}
+
+\pagecolor{pagebg}
+
+% ---------- FRONT MATTER ----------
+\pagenumbering{roman}
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+\begin{tphero}[title=Executive Summary]
+\textbf{TaskPilot} is a production-quality \textbf{AI Project Management Chat Module}: conversational control, structured task CRUD, explainable priority scoring (0--100), live progress analytics, and team slots (max.\ 8). It runs entirely on \textbf{localhost} with Flask + SQLite and a polished dark-themed GUI. Built-in AI guarantees reliable commands; optional GPT enriches natural-language replies.
+\end{tphero}
+
+\vspace{0.5cm}
+\begin{center}
+\begin{minipage}{0.24\textwidth}\centering\metriccard{tpPurple}{5}{Core modules}\end{minipage}\hfill
+\begin{minipage}{0.24\textwidth}\centering\metriccard{tpAccent}{12+}{REST endpoints}\end{minipage}\hfill
+\begin{minipage}{0.24\textwidth}\centering\metriccard{tpWarn}{0--100}{Priority score}\end{minipage}\hfill
+\begin{minipage}{0.24\textwidth}\centering\metriccard{tpBlue}{8}{Team slots}\end{minipage}
+\end{center}
+
+\tableofcontents
+\listoffigures
+\listoftables
+\clearpage
+\pagenumbering{arabic}
+
+% ---------- CH 1 ----------
+\chapter{Introduction}
+
+\epigraph{\itshape ``The best interface is a conversation that gets work done.''}{--- TaskPilot design principle}
+
+\section{Vision}
+Modern teams need more than static todo lists. \textbf{TaskPilot} unifies \emph{natural language}, \emph{structured tasks}, and \emph{visual analytics} so users plan smarter and ship faster.
+
+\begin{tpinfo}
+\textbf{Problem:} Manual prioritization wastes time and hides deadline risk.\\
+\textbf{Solution:} AI-assisted creation, automatic scoring, and real-time dashboards.\\
+\textbf{Delivery:} Full web product at \url{http://127.0.0.1:5000/login/} with session auth and REST API.
+\end{tpinfo}
+
+\section{Core Objectives}
+\begin{enumerate}[leftmargin=*, label=\textcolor{tpPurple}{\bfseries\arabic*.}, itemsep=0.45em]
+  \item \textbf{Chat-first workflow} --- create, list, and prioritize via conversation
+  \item \textbf{Transparent AI} --- every score is explainable to judges and users
+  \item \textbf{Production GUI} --- not a CLI-only prototype; complete visual product
+  \item \textbf{Submission-ready} --- README, \texttt{.env.example}, docs, share ZIP, this report
+\end{enumerate}
+
+% ---------- CH 2 ----------
+\chapter{Functional Requirements}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  module/.style={
+    draw=#1!70, fill=#1!12, rounded corners=8pt,
+    minimum width=3.6cm, minimum height=1.25cm,
+    align=center, font=\sffamily\footnotesize\bfseries, text=#1!90!black,
+    blur shadow={shadow opacity=25}
+  },
+  module/.default=tpPurple,
+  arr/.style={-{Stealth[length=2.5mm]}, line width=1.1pt, tpPurple!75}
+]
+\node[module=tpAccent] (chat) at (0,0) {\faIcon{comments}\\AI Chat};
+\node[module] (tasks) at (4.8,0) {\faIcon{tasks}\\Task Board};
+\node[module=tpWarn] (prio) at (9.6,0) {\faIcon{brain}\\Priority AI};
+\node[module=tpBlue] (dash) at (2.4,-2.4) {\faIcon{chart-pie}\\Dashboard};
+\node[module=tpPurpleDeep] (team) at (7.2,-2.4) {\faIcon{users}\\Team 0/8};
+\draw[arr] (chat) -- (tasks);
+\draw[arr] (tasks) -- (prio);
+\draw[arr] (tasks) -- (dash);
+\draw[arr] (dash) -- (team);
+\node[font=\footnotesize\sffamily\color{tpMuted}] at (4.8,-3.5) {Integrated TaskPilot modules};
+\end{tikzpicture}
+\caption{Functional module map}
+\label{fig:modules}
+\end{figure}
+
+\section{Requirements Traceability}
+\renewcommand{\arraystretch}{1.4}
+\begin{table}[H]
+\centering
+\caption{Competition requirements mapped to TaskPilot features}
+\label{tab:req}
+\rowcolors{2}{tpPurple!4}{white}
+\begin{tabularx}{\textwidth}{@{}>{\sffamily\bfseries\color{tpPurpleDeep}}p{3.6cm} X@{}}
+\rowcolor{tpPurple!18}
+\textcolor{tpDark}{\textbf{Requirement}} & \textcolor{tpDark}{\textbf{Implementation}} \\
+\toprule
+Chat interface &
+AI panel, history, quick chips, commands (\texttt{add task}, \texttt{dashboard}, \texttt{top priorities}) \\
+Task management &
+CRUD, search, filters, modal editor, deadline quick-picks, priority pills \\
+Priority scoring &
+Multi-factor 0--100 score; Critical / High / Medium / Low + explain API \\
+Progress dashboard &
+Completion \%, donut chart, status bars, priority grid, top-8 queue \\
+Team collaboration &
+Up to 8 members, roles, live \texttt{N / 8 Occupied} counter \\
+Localhost GUI &
+Flask + session cookies; dark theme; \texttt{Demo Data} one-click samples \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ---------- CH 3 ----------
+\chapter{System Architecture}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  layer/.style={
+    draw=tpPurple, line width=1pt, rounded corners=6pt,
+    minimum width=12cm, minimum height=1.45cm, align=center,
+    font=\sffamily\small, blur shadow={shadow opacity=20}
+  },
+  tag/.style={font=\footnotesize\sffamily\bfseries\color{tpPurpleDeep}
+}]
+\node[layer, fill=tpPurple!10] (ui) at (0,2.6)
+  {\textbf{Presentation}\quad HTML \textbullet\ CSS Theme \textbullet\ JavaScript (\texttt{app.js})};
+\node[layer, fill=tpAccent!12] (api) at (0,1)
+  {\textbf{Application}\quad Flask Routes \textbullet\ Auth \textbullet\ \texttt{ai\_engine.py} \textbullet\ Tasks};
+\node[layer, fill=tpCard!15] (db) at (0,-0.6)
+  {\textbf{Data}\quad SQLite --- \texttt{tasks}, \texttt{chat\_messages}, \texttt{team\_members}};
+\draw[-{Stealth}, thick, tpPurple] (ui) -- (api) node[tag, right] {REST / JSON};
+\draw[-{Stealth}, thick, tpPurple] (api) -- (db) node[tag, right] {SQL};
+\end{tikzpicture}
+\caption{Three-tier system architecture}
+\label{fig:arch}
+\end{figure}
+
+\section{AI Message Pipeline}
+\begin{tikzpicture}[
+  flowstep/.style={rectangle, rounded corners=4pt, draw=tpPurple!50, fill=white,
+               minimum width=2.5cm, minimum height=0.9cm, align=center, font=\sffamily\footnotesize},
+  flowarr/.style={-{Stealth}, thick, tpAccent!80}
+]
+\node[flowstep, fill=tpPurple!8] (u) {User message};
+\node[flowstep, right=0.75cm of u] (r) {Rule parser};
+\node[flowstep, right=0.75cm of r, fill=tpWarn!10] (g) {GPT (optional)};
+\node[flowstep, right=0.75cm of g] (a) {Task actions};
+\node[flowstep, right=0.75cm of a, fill=tpAccent!12] (ui) {GUI refresh};
+\draw[flowarr] (u) -- (r);
+\draw[flowarr] (r) -- node[above, font=\tiny\sffamily] {no match} (g);
+\draw[flowarr] (r) -- node[below, font=\tiny\sffamily] {match} (a);
+\draw[flowarr] (g) -- (a);
+\draw[flowarr] (a) -- (ui);
+\end{tikzpicture}
+
+% ---------- CH 4 ----------
+\chapter{User Interface \& Features}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\begin{tikzpicture}
+  \pie[
+    radius=2.2,
+    color={tpAccent!70, tpPurple!60, tpWarn!70, tpBlue!60, tpMuted!50},
+    text=legend,
+    explode=0.05,
+    font=\footnotesize\sffamily
+  ]{
+    20/Done,
+    40/In~Progress,
+    25/To~Do,
+    10/Blocked,
+    5/Other
+  }
+\end{tikzpicture}
+\captionof{figure}{Sample task status mix (demo data)}
+\label{fig:pie}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=\linewidth,
+  height=5.2cm,
+  ybar,
+  bar width=14pt,
+  ymin=0, ymax=100,
+  ylabel={Priority score},
+  symbolic x coords={T1,T2,T3,T4,T5},
+  xtick=data,
+  nodes near coords,
+  every node near coord/.append style={font=\tiny\sffamily},
+  axis lines*=left,
+  tick label style={font=\footnotesize\sffamily},
+  label style={font=\footnotesize\sffamily},
+  title={Top tasks by AI priority},
+  title style={font=\sffamily\bfseries},
+  grid=major,
+  grid style={dashed,gray!25},
+]
+\addplot[fill=tpPurple!70, draw=tpPurple] coordinates {
+  (T1,80) (T2,72) (T3,55) (T4,48) (T5,30)
+};
+\end{axis}
+\end{tikzpicture}
+\captionof{figure}{Priority score distribution}
+\label{fig:bar}
+\end{minipage}
+\end{figure}
+
+\begin{multicols}{2}
+\begin{tpfeature}[Login \& Auth]
+Terminal-styled sign-in, demo mode (any email/password), session cookies, logout.
+\end{tpfeature}
+\columnbreak
+\begin{tpfeature}[Welcome Hero]
+Personalized \emph{Welcome back, Name!} banner with purple gradient highlight.
+\end{tpfeature}
+\end{multicols}
+
+\section{Workspace Highlights}
+\begin{itemize}[label=\faIcon{chevron-right}, leftmargin=*, itemsep=0.35em]
+  \item \textbf{AI Assistant} --- GPT / Built-in badge, connection status, typing indicator
+  \item \textbf{Task Board} --- priority-sorted cards, edit/delete, \emph{Explain priority}
+  \item \textbf{Toolbar} --- \textbf{Demo Data} (replace samples), Recalculate, AI Suggest Deadlines
+\end{itemize}
+
+\section{Dashboard \& Team}
+Dashboard shows completion \%, stat cards, donut chart, status breakdown, priority grid, and top-8 active queue. Team tab supports roles (Member, Lead, Developer, Designer) with \textbf{8} maximum slots.
+
+% ---------- CH 5 ----------
+\chapter{AI Priority Algorithm}
+
+\begin{table}[H]
+\centering
+\caption{Priority bands (aligned with UI pills)}
+\rowcolors{2}{white}{tpPurple!5}
+\begin{tabular}{@{}ccc@{}}
+\toprule
+\sffamily\textbf{Score} & \sffamily\textbf{Label} & \sffamily\textbf{Visual} \\
+\midrule
+$\geq 75$ & Critical & \tppill{tpDanger}{CRITICAL} \\
+$55$--$74$ & High & \tppill{tpWarn}{HIGH} \\
+$35$--$54$ & Medium & \tppill{tpPurple}{MEDIUM} \\
+$< 35$ & Low & \tppill{tpBlue}{LOW} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{tphero}[title=Scoring Model]
+\centering\large
+$\displaystyle \text{Score} = \mathrm{clamp}\bigl(40 + w_{\text{kw}} + w_{\text{dl}} + w_{\text{st}} + w_{\text{ef}},\ 0,\ 100\bigr)$\\[0.5em]
+\normalsize\sffamily Keywords (urgent, critical), deadline proximity, status, and effort hours drive the result.
+\end{tphero}
+
+% ---------- CH 6 ----------
+\chapter{API Reference}
+
+\small
+\renewcommand{\arraystretch}{1.3}
+\rowcolors{2}{tpPurple!3}{white}
+\begin{longtable}{@{}>{\sffamily\bfseries}p{1.5cm} >{\ttfamily\footnotesize}p{4.2cm} p{6.5cm}@{}}
+\toprule
+\sffamily Method & \sffamily Endpoint & \sffamily Description \\
+\midrule
+\endhead
+GET & /login/ & Login page \\
+GET & / & Main workspace (auth required) \\
+POST & /api/chat & AI assistant message + actions \\
+GET & /api/dashboard & Stats and chart payloads \\
+GET/POST & /api/tasks & List or create tasks \\
+PATCH & /api/tasks/<id> & Update task fields \\
+DELETE & /api/tasks/<id> & Remove task \\
+POST & /api/seed-demo & Load demo tasks (\texttt{replace: true}) \\
+GET/POST & /api/team & Team members \\
+POST & /api/tasks/recalculate & Re-score all tasks \\
+\bottomrule
+\caption{Primary REST API surface}
+\end{longtable}
+\normalsize
+
+% ---------- CH 7 ----------
+\chapter{Installation \& Configuration}
+
+\begin{tcolorbox}[
+  enhanced, colback=codebg, colframe=tpPurple!60,
+  title={\color{white}\faIcon{terminal}\quad Quick Start --- Windows},
+  coltitle=white, colbacktitle=tpPurple, arc=5pt,
+  drop shadow
+]
+\begin{lstlisting}
+python -m venv venv
+.\venv\Scripts\activate
+pip install -r requirements.txt
+copy .env.example .env
+python run.py
+# Browser: http://127.0.0.1:5000/login/
+\end{lstlisting}
+\end{tcolorbox}
+
+\begin{tpwarning}
+OpenAI is \textbf{optional}. All task commands work with the built-in rule engine; set \texttt{OPENAI\_API\_KEY} only for richer chat replies.
+\end{tpwarning}
+
+% ---------- CH 8 ----------
+\chapter{Testing \& Judge Demo}
+
+\section{Automated Verification}
+\texttt{scripts/test\_api.py} exercises health, login, seed-demo, chat task creation, priorities, and dashboard.
+
+\section{Manual Checklist}
+\begin{tabular}{@{}c@{\hspace{0.55cm}}p{10.8cm}@{}}
+\facheck & Login + welcome banner \\
+\facheck & \textbf{Demo Data} loads 5 sample tasks \\
+\facheck & Dashboard charts populate \\
+\facheck & Chat: \texttt{add task ... urgent due tomorrow} \\
+\facheck & Deadline quick-picks and clear \\
+\facheck & Team add/remove within 8 slots \\
+\end{tabular}
+
+\section{5-Minute Demo Script}
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=*]
+  \item Problem statement (30\,s)
+  \item Chat commands + \textbf{Demo Data} (90\,s)
+  \item Task board + AI suggest deadlines (60\,s)
+  \item Dashboard analytics tour (60\,s)
+  \item Team tab + wrap-up (60\,s)
+\end{enumerate}
+
+% ---------- CONCLUSION ----------
+\chapter{Conclusion}
+
+\begin{tpinfo}
+\textbf{TaskPilot} is a complete, judge-ready submission: working localhost GUI, Flask backend, explainable AI priorities, professional documentation, and distributable \texttt{TaskPilot-share.zip}.
+\end{tpinfo}
+
+\vspace{0.4cm}
+\textbf{Strengths:} Reliability, visual polish, modular Python packages, full competition checklist.
+
+\textbf{Future enhancements:} Cloud hosting, WebSockets, Kanban lanes, email notifications.
+
+\vspace{1cm}
+\begin{center}
+\begin{tikzpicture}
+  \node[
+    fill=tpPurple!10, draw=tpPurple, rounded corners=10pt,
+    inner sep=16pt, font=\sffamily\large\bfseries\color{tpPurpleDeep}
+  ] {Thank you for reviewing TaskPilot};
+\end{tikzpicture}
+\end{center}
+
+% ---------- REFERENCES ----------
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{References}
+\bibitem{flask} Pallets Projects, \textit{Flask Documentation}. \url{https://flask.palletsprojects.com/}
+\bibitem{openai} OpenAI, \textit{API Reference}. \url{https://platform.openai.com/docs/}
+\bibitem{sqlite} SQLite Consortium, \textit{SQLite Documentation}. \url{https://www.sqlite.org/docs.html}
+\bibitem{tikz} T.\,Tantau, \textit{PGF/TikZ Manual}, CTAN.
+\bibitem{event} AI App Development Event, \textit{Competition Instructions}, 2026.
+\end{thebibliography}
+
+\end{document}

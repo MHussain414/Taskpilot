@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ app_name }} — {{ app_tagline }}</title>
+  <meta name="theme-color" content="#6366f1" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="top-bar">
+      <div class="brand">
+        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" class="brand-logo" />
+        <div>
+          <h1>{{ app_name }}</h1>
+          <p class="brand-sub">{{ app_tagline }}</p>
+        </div>
+      </div>
+      <nav class="nav-tabs" role="tablist">
+        <button class="nav-tab active" data-view="workspace" role="tab">Workspace</button>
+        <button class="nav-tab" data-view="dashboard" role="tab">Dashboard</button>
+        <button class="nav-tab" data-view="team" role="tab">Team</button>
+      </nav>
+      <div class="header-actions">
+        <button type="button" class="btn btn-ghost btn-icon" id="btnTheme" title="Toggle light/dark theme">◐</button>
+        <span class="user-pill">{{ user }}</span>
+        <button type="button" class="btn btn-ghost" id="btnExport" title="Export tasks">Export</button>
+        <a href="{{ url_for('main.api_docs') }}" class="btn btn-ghost" target="_blank" rel="noopener">API</a>
+        <button type="button" class="btn btn-ghost" id="btnSeed" title="Load demo tasks">Demo Data</button>
+        <button type="button" class="btn btn-primary" id="btnNewTask">+ New Task</button>
+        <a href="{{ url_for('main.logout') }}" class="btn btn-ghost btn-logout">Logout</a>
+      </div>
+    </header>
+
+    <section class="welcome-hero" aria-label="Welcome">
+      <h2 class="welcome-title">Welcome back, <span class="welcome-name">{{ welcome_name }}</span>!</h2>
+      <p class="welcome-sub">Ready to manage your projects with AI today?</p>
+    </section>
+
+    <div class="app-views">
+    <main class="main-grid app-view" id="viewWorkspace" data-view="workspace">
+      <section class="panel chat-panel" aria-label="AI Chat">
+        <div class="terminal-titlebar">
+          <div class="window-dots" aria-hidden="true"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+          <span>taskpilot@workspace:~$ ai-assistant</span>
+        </div>
+        <div class="panel-head">
+          <h2>AI Assistant</h2>
+          <span class="badge badge-live" id="connectionBadge">Connecting...</span>
+          <span class="badge badge-ai" id="aiModeBadge" title="AI engine mode">AI</span>
+        </div>
+        <div class="chat-messages" id="chatMessages" role="log"></div>
+        <div class="chat-quick">
+          <button type="button" class="chip" data-prompt="top priorities">Top priorities</button>
+          <button type="button" class="chip" data-prompt="dashboard">Progress</button>
+          <button type="button" class="chip" data-prompt="What is TaskPilot?">About</button>
+          <button type="button" class="chip" data-prompt="How does priority scoring work?">Priority</button>
+          <button type="button" class="chip" data-prompt="How do team members communicate?">Team chat</button>
+          <button type="button" class="chip" data-prompt="help">All topics</button>
+        </div>
+        <form class="chat-form" id="chatForm">
+          <input type="text" id="chatInput" placeholder="Ask anything: features, tasks, team, deadlines, how-to…" autocomplete="off" />
+          <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+      </section>
+
+      <section class="panel tasks-panel" aria-label="Task Board">
+        <div class="terminal-titlebar">
+          <div class="window-dots" aria-hidden="true"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+          <span>taskpilot@workspace:~$ tasks --board</span>
+        </div>
+        <div class="panel-head">
+          <h2>Task Board</h2>
+          <div class="panel-tools">
+            <div class="board-toggle" role="group">
+              <button type="button" class="btn btn-sm btn-ghost active" id="btnBoardList" data-board="list">List</button>
+              <button type="button" class="btn btn-sm btn-ghost" id="btnBoardKanban" data-board="kanban">Kanban</button>
+            </div>
+            <button type="button" class="btn btn-sm btn-ghost" id="btnRecalc">Recalculate</button>
+            <button type="button" class="btn btn-sm btn-accent" id="btnSuggest">AI Suggest Deadlines</button>
+          </div>
+        </div>
+        <div class="task-filters">
+          <input type="search" id="taskSearch" placeholder="Search tasks..." />
+          <select id="filterStatus">
+            <option value="">All statuses</option>
+            <option value="todo">Todo</option>
+            <option value="in_progress">In Progress</option>
+            <option value="done">Done</option>
+            <option value="blocked">Blocked</option>
+          </select>
+        </div>
+        <div class="task-list" id="taskList"></div>
+        <div class="kanban-board hidden" id="kanbanBoard"></div>
+      </section>
+    </main>
+
+    <section class="dashboard-view app-view hidden" id="viewDashboard" data-view="dashboard" aria-label="Progress Dashboard">
+      <div class="stats-row" id="statsRow"></div>
+      <div class="charts-row">
+        <div class="panel chart-panel">
+          <h3>Completion Overview</h3>
+          <div class="donut-wrap">
+            <svg class="donut" viewBox="0 0 120 120" id="donutChart">
+              <circle class="donut-bg" cx="60" cy="60" r="50" />
+              <circle class="donut-fg" cx="60" cy="60" r="50" id="donutFg" />
+            </svg>
+            <div class="donut-label" id="donutLabel">0%</div>
+          </div>
+        </div>
+        <div class="panel chart-panel">
+          <h3>Status Breakdown</h3>
+          <div class="bar-chart" id="statusBars"></div>
+        </div>
+        <div class="panel chart-panel">
+          <h3>Priority Distribution</h3>
+          <div class="priority-grid" id="priorityGrid"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Priority Queue (Active)</h3>
+        <div class="priority-queue" id="priorityQueue"></div>
+      </div>
+      <div class="panel activity-panel">
+        <div class="panel-head">
+          <h3>Activity Log</h3>
+          <span class="badge badge-live">Audit trail</span>
+        </div>
+        <ul class="activity-feed" id="activityFeed"></ul>
+      </div>
+    </section>
+
+    <section class="team-view app-view hidden" id="viewTeam" data-view="team" aria-label="Team">
+      <div class="team-layout">
+        <div class="panel team-panel">
+          <div class="panel-head">
+            <h2>Team Slots</h2>
+            <span class="team-count" id="teamCount">0 / 8 Occupied</span>
+          </div>
+          <form class="team-form" id="teamForm">
+            <input type="text" id="memberName" placeholder="Member name" maxlength="40" required />
+            <select id="memberRole">
+              <option value="member">Member</option>
+              <option value="lead">Lead</option>
+              <option value="developer">Developer</option>
+              <option value="designer">Designer</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Join Team</button>
+          </form>
+          <ul class="team-list" id="teamList"></ul>
+        </div>
+        <div class="panel team-chat-panel">
+          <div class="panel-head">
+            <h2>Team Chat</h2>
+            <span class="badge badge-live">Live</span>
+          </div>
+          <p class="team-chat-hint">Everyone on this project can read and post here. Coordinate tasks, deadlines, and blockers.</p>
+          <div class="team-chat-messages" id="teamChatMessages" aria-live="polite"></div>
+          <form class="team-chat-form" id="teamChatForm">
+            <input type="text" id="teamChatInput" placeholder="Message your team…" maxlength="2000" autocomplete="off" />
+            <button type="submit" class="btn btn-primary">Send</button>
+          </form>
+        </div>
+      </div>
+    </section>
+    </div>
+
+    {% include '_footer.html' %}
+
+  <dialog class="modal" id="taskModal">
+    <form id="taskForm" method="dialog">
+      <h3 id="modalTitle">New Task</h3>
+      <input type="hidden" id="taskId" />
+      <label>Title <input type="text" id="taskTitle" required maxlength="200" /></label>
+      <label>Description <textarea id="taskDesc" rows="3"></textarea></label>
+      <div class="form-row">
+        <label>Status
+          <select id="taskStatus">
+            <option value="todo">Todo</option>
+            <option value="in_progress">In Progress</option>
+            <option value="done">Done</option>
+            <option value="blocked">Blocked</option>
+          </select>
+        </label>
+        <label>Effort (hours) <input type="number" id="taskEffort" min="0.5" max="80" step="0.5" value="4" /></label>
+      </div>
+      <div class="deadline-block">
+        <label for="taskDeadline">Deadline</label>
+        <div class="deadline-input-row">
+          <input type="date" id="taskDeadline" name="deadline" />
+          <button type="button" class="btn btn-sm btn-ghost" id="btnDeadlinePicker" title="Open calendar">📅</button>
+        </div>
+        <div class="deadline-quick" id="deadlineQuick">
+          <button type="button" class="chip" data-deadline-offset="0">Today</button>
+          <button type="button" class="chip" data-deadline-offset="1">Tomorrow</button>
+          <button type="button" class="chip" data-deadline-offset="7">+7 days</button>
+          <button type="button" class="chip" data-deadline-offset="14">+2 weeks</button>
+          <button type="button" class="chip" data-deadline-clear>Clear</button>
+          <button type="button" class="chip" data-deadline-suggest>Use AI date</button>
+        </div>
+        <p class="deadline-hint" id="deadlineHint"></p>
+      </div>
+      <label>Assignee <input type="text" id="taskAssignee" maxlength="40" /></label>
+      <label>Tags <input type="text" id="taskTags" placeholder="api, frontend" /></label>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="btnCancelModal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="appToast" class="app-toast" role="alert" aria-live="polite"></div>
+  <script src="{{ url_for('static', filename='js/app.js') }}?v=10" defer></script>
+</body>
+</html>
