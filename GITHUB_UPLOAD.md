@@ -18,14 +18,14 @@ Open **PowerShell** in the project folder:
 ```powershell
 cd "D:\competiton project 2026"
 
-git remote add origin https://github.com/MHussain414/TaskPilot.git
+git remote add origin https://github.com/MHussain414/Taskpilot.git
 git push -u origin main
 ```
 
 If `origin` already exists:
 
 ```powershell
-git remote set-url origin https://github.com/MHussain414/TaskPilot.git
+git remote set-url origin https://github.com/MHussain414/Taskpilot.git
 git push -u origin main
 ```
 

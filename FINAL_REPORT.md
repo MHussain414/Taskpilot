@@ -2,7 +2,7 @@
 
 **Project:** TaskPilot — AI Project Management Chat Module  
 **Event:** AI App Development Competition 2026  
-**Repository:** [github.com/MHussain414/TaskPilot](https://github.com/MHussain414/TaskPilot)
+**Repository:** [github.com/MHussain414/Taskpilot](https://github.com/MHussain414/Taskpilot)
 
 ---
 

@@ -5,7 +5,7 @@ Thank you for your interest in **TaskPilot**.
 ## Development setup
 
 ```bash
-git clone https://github.com/MHussain414/TaskPilot.git
+git clone https://github.com/MHussain414/Taskpilot.git
 cd TaskPilot
 python -m venv venv
 source venv/bin/activate

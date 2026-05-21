@@ -74,7 +74,7 @@ This project demonstrates:
 ### Windows
 
 ```powershell
-git clone https://github.com/MHussain414/TaskPilot.git
+git clone https://github.com/MHussain414/Taskpilot.git
 cd TaskPilot
 python -m venv venv
 .\venv\Scripts\activate

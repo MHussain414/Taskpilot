@@ -11,7 +11,7 @@ $ProjectRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $ProjectRoot
 
 $Owner = "MHussain414"
-$Repo = "TaskPilot"
+$Repo = "Taskpilot"
 $Remote = "https://github.com/$Owner/$Repo.git"
 
 function Get-Gh {
