@@ -28,3 +28,4 @@ docs/report/*.lot
 *.jpeg
 *.jpg
 WhatsApp*
+.vercel
